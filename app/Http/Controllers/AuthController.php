@@ -42,6 +42,7 @@ class AuthController extends Controller
         if (!Auth::attempt($request->only('reg_number','password'))) {
             return response()->json(['message'=>'user not found'],403);
         }
+        
         return response()->json([
             'user' => auth()->user(),
             'token' => auth()->user()->createToken($request->reg_number)->plainTextToken,
