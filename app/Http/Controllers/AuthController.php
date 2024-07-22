@@ -16,9 +16,9 @@ class AuthController extends Controller
             'reg_number' => 'required|unique:users',
             'password' => 'required|min:4|max:10|confirmed'
         ]);
-        
+
         try {
-            
+
             $registerUser = new User;
             $registerUser->name = $request->name;
             $registerUser->email = $request->email;
@@ -33,18 +33,22 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-       $data = $request->validate([
-            'reg_number' => 'required',
-            'password' => 'required|min:4|max:10'
-        ]);
 
-        if (!Auth::attempt($data)) {
+        try {
+            $request->validate([
+                'reg_number' => 'required',
+                'password' => 'required|min:4|max:10'
+            ]);
+        if (!Auth::attempt($request->only('reg_number','password'))) {
             return response()->json(['message'=>'user not found'],403);
         }
         return response()->json([
             'user' => auth()->user(),
             'token' => auth()->user()->createToken($request->reg_number)->plainTextToken,
         ],200);
+        }catch (\Exception $e) {
+            return response()->json(['message'=> $e->getMessage()],203);
+        }
     }
 
     public function logout(){

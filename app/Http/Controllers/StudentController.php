@@ -14,4 +14,22 @@ class StudentController extends Controller
         return response()->json(['user' => $user_details],200);
     }
 
+    public function getSpecificStudent(Request $request){
+        
+
+        try {
+            $request->validate([
+                'reg_number' => 'required'
+            ]); 
+
+            $user = User::where('reg_number',$request->reg_number)->first();
+            $user_details = new ExamDetails($user);
+            return response()->json(['user' => $user_details],200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()],422);
+        }
+
+        
+    }
+
 }

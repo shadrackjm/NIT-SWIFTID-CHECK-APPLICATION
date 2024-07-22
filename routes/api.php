@@ -12,4 +12,5 @@ Route::post('/login',[AuthController::class,'login']);
 Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [AuthController::class,'logout']);
     Route::get('/get-exam', [StudentController::class,'getStudentData']);
+    Route::post('/scan', [StudentController::class,'getSpecificStudent']);
 });
